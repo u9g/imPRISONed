@@ -4,7 +4,8 @@
   "minVersion": "0.7",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "HandleChatMixin",
+    "EntityMixin",
+    "redirect_chat_commands.HandleChatMixin",
     "accessor.ChatComponentStyleAccessor",
     "accessor.EnumChatFormattingAccessor",
     "accessor.GuiContainerAccessor",
@@ -16,20 +17,21 @@
     "we_do_a_bit_of_trolling.LivingEntityMixin"
   ],
   "client": [
-    "GuiChestMixin",
-    "RenderLivingEntityMixin",
+    "GuiScreenMixin",
+    "we_do_a_bit_of_trolling.RenderLivingEntityMixin",
     "accessor.GuiChestAccessor",
     "accessor.GuiEditSignAccessor",
     "accessor.GuiNewChatAccessor",
     "block_nbt_manager.NetHandlerPlayClientMixin",
     "events.GuiContainerMixin",
+    "events.NetHandlerPlayClientMixin",
     "future_signs.GuiEditSignMixin",
     "future_signs.TileEntitySignRendererMixin",
+    "item_overlays.RenderItemMixin",
     "lore_cleanup.GuiScreenMixin",
     "mod_settings_hotkey.GuiIngameForgeMixin",
     "perf.EffectRendererMixin",
     "scale_baby_player_capes.MixinLayerCape",
-    "show_progress_on_item.RenderItemMixin",
     "we_do_a_bit_of_trolling.RenderItemMixin"
   ]
 }

@@ -1,5 +1,6 @@
-package com.example.mods;
+package com.example.mods.overlays;
 
+import com.example.PrisonsModConfig;
 import com.example.mixin.accessor.GuiChestAccessor;
 import com.example.mixin.accessor.GuiContainerAccessor;
 import dev.u9g.configlib.util.render.RenderUtils;
@@ -35,6 +36,7 @@ public class TradeOverlay {
     }
 
     private static void renderWindow(Side side, int x0, int y0, int x1, String header) {
+        if (!PrisonsModConfig.INSTANCE.gui.tradeOverlayEnabled) return;
         int windowWidth = 2 * x1 / 3;
         int left = side == Side.RIGHT ? x0 + x1 : x0 - windowWidth;
         RenderUtils.drawFloatingRectDark(left, y0, windowWidth, 126,
@@ -79,65 +81,86 @@ public class TradeOverlay {
         }
 
         int y = y0 + 7 + 7;
-        if (money > 0) {
-            fr.drawStringWithShadow("- Money: $" + getHumanReadablePriceFromNumber(money), left + fr.getCharWidth(' '), y, fr.getColorCode('7'));
-            y += 10;
-        }
-        if (energy > 0) {
-            long base = energy / Integer.MAX_VALUE;
-            long remainder = energy % Integer.MAX_VALUE;
-            // TODO: Does the stack part work?
-            fr.drawStringWithShadow("§7- Energy: " + getHumanReadablePriceFromNumber(energy), left + fr.getCharWidth(' '), y, fr.getColorCode('7'));
-            if (base > 0) {
-                String line = "§8(" + base + " stack" + (base > 1 ? "s" : "");
-                if (remainder > 0) {
-                    line += " + " + getHumanReadablePriceFromNumber(remainder);
+        for (int i : PrisonsModConfig.INSTANCE.gui.tradeText) {
+            switch (i) {
+                case 0: {
+                    if (money > 0) {
+                        fr.drawStringWithShadow("- Money: $" + getHumanReadablePriceFromNumber(money), left + fr.getCharWidth(' '), y, fr.getColorCode('7'));
+                        y += 10;
+                    }
+                    break;
                 }
-                line += ")";
-                fr.drawStringWithShadow(line, left + fr.getCharWidth(' ')*2 + fr.getCharWidth('-'), y, fr.getColorCode('f'));
-            }
-            y += 10;
-        }
-        if (slots > 0) {
-            int stacks = slots / 64;
-            int remainder = slots % 64;
-            if (stacks > 0) {
-                String line = "§8(" + stacks + " stack" + (stacks > 1 ? "s" : "");
-                if (remainder > 0) {
-                    line += " + " + remainder;
+                case 1: {
+                    if (energy > 0) {
+                        long base = energy / Integer.MAX_VALUE;
+                        long remainder = energy % Integer.MAX_VALUE;
+                        // TODO: Does the stack part work?
+                        fr.drawStringWithShadow("§7- Energy: " + getHumanReadablePriceFromNumber(energy), left + fr.getCharWidth(' '), y, fr.getColorCode('7'));
+                        y += 10;
+                        if (base > 0) {
+                            String line = "§8(" + base + " stack" + (base > 1 ? "s" : "");
+                            if (remainder > 0) {
+                                line += " + " + getHumanReadablePriceFromNumber(remainder);
+                            }
+                            line += ")";
+                            fr.drawStringWithShadow(line, left + fr.getCharWidth(' ')*2 + fr.getCharWidth('-'), y, fr.getColorCode('f'));
+                            y += 10;
+                        }
+                    }
+                    break;
                 }
-                line += ")";
-                fr.drawStringWithShadow(line, left + fr.getCharWidth(' ')*2 + fr.getCharWidth('-'), y, fr.getColorCode('f'));
-            }
-            fr.drawStringWithShadow("§7- Slots: " + slots + (slots > 64 ? " §8(" + (slots/64.0) + " stacks)" : ""), left + fr.getCharWidth(' '), y, fr.getColorCode('f'));
-            y += 10;
-        }
-        if (heroicSlots > 0) {
-            int stacks = heroicSlots / 64;
-            int remainder = heroicSlots % 64;
-            if (stacks > 0) {
-                String line = "§8(" + stacks + " stack" + (stacks > 1 ? "s" : "");
-                if (remainder > 0) {
-                    line += " + " + remainder;
+                case 2: {
+                    if (slots > 0) {
+                        fr.drawStringWithShadow("§7- Slots: " + slots + (slots > 64 ? " §8(" + (slots/64.0) + " stacks)" : ""), left + fr.getCharWidth(' '), y, fr.getColorCode('f'));
+                        y += 10;
+                        int stacks = slots / 64;
+                        int remainder = slots % 64;
+                        if (stacks > 0) {
+                            String line = "§8(" + stacks + " stack" + (stacks > 1 ? "s" : "");
+                            if (remainder > 0) {
+                                line += " + " + remainder;
+                            }
+                            line += ")";
+                            fr.drawStringWithShadow(line, left + fr.getCharWidth(' ')*2 + fr.getCharWidth('-'), y, fr.getColorCode('f'));
+                            y += 10;
+                        }
+                    }
+                    break;
                 }
-                line += ")";
-                fr.drawStringWithShadow(line, left + fr.getCharWidth(' ')*2 + fr.getCharWidth('-'), y, fr.getColorCode('f'));
-            }
-            fr.drawStringWithShadow("§7- Heroic Slots: " + heroicSlots + (heroicSlots > 64 ? " §8(" + (heroicSlots/64.0) + " stacks)" : ""), left + fr.getCharWidth(' '), y, fr.getColorCode('f'));
-            y += 10;
-        }
-        if (execTimeMins > 0) {
-            String line = "§7- Exec time: " + execTimeMins + "mins";
-            fr.drawStringWithShadow(line, left + fr.getCharWidth(' '), y, fr.getColorCode('f'));
-            y += 10;
-            if (execTimeMins > 60) {
-                String line2 = "(" + (execTimeMins / 60) + " hr" + (execTimeMins / 60 != 1 ? "s" : "");
-                if (execTimeMins % 60 > 0) {
-                    line2 += " + " + (execTimeMins % 60) + " min" + (execTimeMins % 60 != 1 ? "s" : "");
+                case 3: {
+                    if (heroicSlots > 0) {
+                        fr.drawStringWithShadow("§7- Heroic Slots: " + heroicSlots + (heroicSlots > 64 ? " §8(" + (heroicSlots/64.0) + " stacks)" : ""), left + fr.getCharWidth(' '), y, fr.getColorCode('f'));
+                        y += 10;
+                        int stacks = heroicSlots / 64;
+                        int remainder = heroicSlots % 64;
+                        if (stacks > 0) {
+                            String line = "§8(" + stacks + " stack" + (stacks > 1 ? "s" : "");
+                            if (remainder > 0) {
+                                line += " + " + remainder;
+                            }
+                            line += ")";
+                            fr.drawStringWithShadow(line, left + fr.getCharWidth(' ')*2 + fr.getCharWidth('-'), y, fr.getColorCode('f'));
+                        }
+                    }
+                    break;
                 }
-                line2 += ")";
-                fr.drawStringWithShadow(line2, left + fr.getCharWidth(' ')*2 + fr.getCharWidth('-'), y, fr.getColorCode('8'));
-                y += 10;
+                case 4: {
+                    if (execTimeMins > 0) {
+                        String line = "§7- Exec time: " + execTimeMins + "mins";
+                        fr.drawStringWithShadow(line, left + fr.getCharWidth(' '), y, fr.getColorCode('f'));
+                        y += 10;
+                        if (execTimeMins > 60) {
+                            String line2 = "(" + (execTimeMins / 60) + " hr" + (execTimeMins / 60 != 1 ? "s" : "");
+                            if (execTimeMins % 60 > 0) {
+                                line2 += " + " + (execTimeMins % 60) + " min" + (execTimeMins % 60 != 1 ? "s" : "");
+                            }
+                            line2 += ")";
+                            fr.drawStringWithShadow(line2, left + fr.getCharWidth(' ')*2 + fr.getCharWidth('-'), y, fr.getColorCode('8'));
+                            y += 10;
+                        }
+                    }
+                    break;
+                }
             }
         }
     }

@@ -24,6 +24,7 @@ loom {
             property("asmhelper.verbose", "true")
             arg("--tweakClass", "org.spongepowered.asm.launch.MixinTweaker")
             arg("--mixin", "mixins.examplemod.json")
+            property("devauth.enabled", "true")
         }
     }
     forge {
@@ -48,6 +49,7 @@ repositories {
     maven("https://repo.spongepowered.org/maven/")
     // If you don't want to log in with your real minecraft account, remove this line
     maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
+    maven("https://jitpack.io")
     mavenLocal()
 }
 
@@ -69,8 +71,8 @@ dependencies {
     // If you don't want to log in with your real minecraft account, remove this line
     runtimeOnly("me.djtheredstoner:DevAuth-forge-legacy:1.1.0")
 
-    modImplementation("dev.u9g:configlib:1.2.1")
-    shadowImpl("dev.u9g:configlib:1.2.1")
+    modImplementation("com.github.u9g:neuconfiglib-forge:45538f2dc4")
+    shadowImpl("com.github.u9g:neuconfiglib-forge:45538f2dc4")
 }
 
 // Tasks:

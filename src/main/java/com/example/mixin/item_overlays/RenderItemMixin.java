@@ -1,12 +1,13 @@
-package com.example.mixin.show_progress_on_item;
+package com.example.mixin.item_overlays;
 
-import com.example.mods.show_progress_on_item.ItemProgressManager;
+import com.example.mods.item_overlays.ItemProgressManager;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,6 +21,18 @@ public abstract class RenderItemMixin {
     @Inject(method = "renderItemOverlayIntoGUI(Lnet/minecraft/client/gui/FontRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V", at = @At("TAIL"))
     public void renderItemOverlay(FontRenderer fr, ItemStack stack, int xPosition, int yPosition, String text, CallbackInfo ci) {
         if (stack == null) return;
+
+        int playerCount = ItemProgressManager.renderCountOnItem(stack);
+        if (playerCount >= 0) {
+            String s = (playerCount == 0 ? EnumChatFormatting.RED : "") + String.valueOf(playerCount);
+            GlStateManager.disableLighting();
+            GlStateManager.disableDepth();
+            GlStateManager.disableBlend();
+            fr.drawStringWithShadow(s, xPosition + 19 - 2 - fr.getStringWidth(s), yPosition + 6 + 3, 0xFFFFFF);
+            GlStateManager.enableLighting();
+            GlStateManager.enableDepth();
+        }
+
         double progress = ItemProgressManager.progressToRender(stack);
         if (progress == -1) return;
         int j = (int)Math.round(13.0 - progress * 13.0);

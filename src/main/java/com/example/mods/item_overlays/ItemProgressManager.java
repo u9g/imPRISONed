@@ -1,10 +1,17 @@
-package com.example.mods.show_progress_on_item;
+package com.example.mods.item_overlays;
 
 import com.example.PrisonsModConfig;
+import com.example.mixin.accessor.GuiChestAccessor;
+import dev.u9g.configlib.util.Utils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ItemProgressManager {
     /**
@@ -28,6 +35,27 @@ public class ItemProgressManager {
                 if (cooldown >= timeSinceLastUse) {
                     return timeSinceLastUse / (double)cooldown;
                 }
+            }
+        }
+        return -1;
+    }
+    private static Pattern playersLine = Pattern.compile("Players: (\\d+)");
+
+    /**
+     * return -1 to not do anything
+     */
+    public static int renderCountOnItem(ItemStack stack) {
+        if (!PrisonsModConfig.INSTANCE.gui.warpOverlayEnabled) return -1;
+        GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+        if (!(screen instanceof GuiChest) ||
+            !"§lWarps".equals(((GuiChestAccessor)screen).lowerChestInventory().getDisplayName().getUnformattedText()) ||
+            !stack.hasTagCompound()) return -1;
+        for (String line : stack.getTooltip(Minecraft.getMinecraft().thePlayer, false)) {
+            Matcher matcher = playersLine.matcher(Utils.removeColor(line));
+            if (matcher.matches()) {
+                int playerCount = Integer.parseInt(matcher.group(1));
+                if (!PrisonsModConfig.INSTANCE.gui.showZerosInWarp && playerCount == 0) return -1;
+                return playerCount;
             }
         }
         return -1;

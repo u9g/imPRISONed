@@ -3,11 +3,12 @@ package com.example;
 import com.google.gson.annotations.Expose;
 import dev.u9g.configlib.config.Config;
 import dev.u9g.configlib.config.GuiTextures;
-import dev.u9g.configlib.config.annotations.Category;
-import dev.u9g.configlib.config.annotations.ConfigEditorBoolean;
-import dev.u9g.configlib.config.annotations.ConfigEditorSlider;
-import dev.u9g.configlib.config.annotations.ConfigOption;
+import dev.u9g.configlib.config.annotations.*;
 import net.minecraft.util.EnumChatFormatting;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class PrisonsModConfig implements Config {
     public static PrisonsModConfig INSTANCE = new PrisonsModConfig();
@@ -32,7 +33,7 @@ public class PrisonsModConfig implements Config {
     }
 
     @Expose
-    @Category(name = "Gui", desc = "Options that toggle gui options.")
+    @Category(name = "GUI", desc = "Options that toggle GUI options.")
     public Gui gui = new Gui();
 
     @Expose
@@ -74,6 +75,90 @@ public class PrisonsModConfig implements Config {
         )
         @ConfigEditorBoolean
         public boolean cauldronText = true;
+
+        @ConfigOption(
+                name = "Brag Overlay",
+                desc = ""
+        )
+        @ConfigGroupHeader(groupId = 0)
+        public boolean _brag_overlay_ = false;
+
+        @Expose
+        @ConfigOption(
+                name = "Enable brag overlay",
+                desc = "Enables the brag overlay."
+        )
+        @ConfigEditorBoolean
+        @ConfigGroupMember(groupId = 0)
+        public boolean bragOverlayEnabled = true;
+
+        @Expose
+        @ConfigOption(
+                name = "Right click to equip",
+                desc = "Allow right clicking items in the brag inventory to equip them to the player"
+        )
+        @ConfigEditorBoolean
+        @ConfigGroupMember(groupId = 0)
+        public boolean rightClickItemsToEquip = true;
+
+        @ConfigOption(
+                name = "Trade Overlay",
+                desc = ""
+        )
+        @ConfigGroupHeader(groupId = 1)
+        public boolean _trade_overlay_ = false;
+
+        @Expose
+        @ConfigOption(
+                name = "Enable trade overlay",
+                desc = "Enables the trade overlay."
+        )
+        @ConfigEditorBoolean
+        @ConfigGroupMember(groupId = 1)
+        public boolean tradeOverlayEnabled = true;
+
+        @Expose
+        @ConfigOption(
+                name = "Trade text",
+                desc = "\u00a7eDrag text to change the appearance of the Overlay\n" +
+                "\u00a7rTrade someone to show this Overlay with useful information"
+        )
+        @ConfigEditorDraggableList(
+                exampleText = {
+                        "\u00a77 - Money: $2.50B",
+                        "\u00a77 - Energy: 2.50B\n   \u00a78(1 stack + 352.51M)",
+                        "\u00a77 - Slots: 150\n   \u00a78(2 stacks + 22)",
+                        "\u00a77 - Heroic Slots: 150\n   \u00a78(2 stacks + 22)",
+                        "\u00a77 - Exec time: 150 mins\n   \u00a78(2 hrs + 30 mins)",
+                }
+        )
+        @ConfigGroupMember(groupId = 1)
+        public List<Integer> tradeText = new ArrayList<>(Arrays.asList(0, 1, 2, 3, 4));
+
+        @ConfigOption(
+                name = "Warps Overlay",
+                desc = ""
+        )
+        @ConfigGroupHeader(groupId = 2)
+        public boolean _warps_overlay = false;
+
+        @Expose
+        @ConfigOption(
+                name = "Enable warps overlay",
+                desc = "Enables the warp overlay (show numbers over warps)"
+        )
+        @ConfigEditorBoolean
+        @ConfigGroupMember(groupId = 2)
+        public boolean warpOverlayEnabled = true;
+
+        @Expose
+        @ConfigOption(
+                name = "Show zero players",
+                desc = "Enables the showing zero players over warp"
+        )
+        @ConfigEditorBoolean
+        @ConfigGroupMember(groupId = 2)
+        public boolean showZerosInWarp = false;
     }
 
     public static class Chat {
@@ -84,6 +169,14 @@ public class PrisonsModConfig implements Config {
         )
         @ConfigEditorBoolean
         public boolean showSmugglerMsgs = false;
+
+        @Expose
+        @ConfigOption(
+                name = "Show elite bandit spotted msgs",
+                desc = "They look like: (!) Elite Bandits spotted in the Diamond Zone"
+        )
+        @ConfigEditorBoolean
+        public boolean showEliteBanditSpottedMsgs = false;
 
         @Expose
         @ConfigOption(
@@ -113,6 +206,7 @@ public class PrisonsModConfig implements Config {
         @ConfigEditorBoolean
         public boolean drawBarForPets = true;
 
+        // TODO: Make this a hotkey
         @Expose
         @ConfigOption(
                 name = "Fly speed boost",
@@ -132,6 +226,14 @@ public class PrisonsModConfig implements Config {
         )
         @ConfigEditorBoolean
         public boolean newSigns = true;
+
+        @Expose
+        @ConfigOption(
+                name = "Waypoint through walls",
+                desc = "Enables showing waypoint beacons through walls"
+        )
+        @ConfigEditorBoolean
+        public boolean beaconsThroughWalls = true;
     }
 
     public static class Debug {

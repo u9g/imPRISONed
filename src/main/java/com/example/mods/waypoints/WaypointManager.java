@@ -1,18 +1,18 @@
 package com.example.mods.waypoints;
 
+import com.example.PrisonsModConfig;
 import com.example.utils.RenderUtil;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class WaypointManager {
-    private static final List<Waypoint> waypoints = new ArrayList<>();
-    private static final List<Waypoint> waypointsToAdd = new ArrayList<>();
+    private static final Set<Waypoint> waypoints = ConcurrentHashMap.newKeySet();
 
     private static class Waypoint {
         public double x;
@@ -30,20 +30,24 @@ public class WaypointManager {
         }
 
         public void renderBeacon(float partialTicks) {
-            RenderUtil.renderBeaconBeam(x, y, z, 0x772991, 1, partialTicks, true);
+            RenderUtil.renderBeaconBeam(x, y, z, 0x772991, 1, partialTicks, PrisonsModConfig.INSTANCE.misc.beaconsThroughWalls);
         }
 
         public void renderNametag(float partialTicks) {
-            RenderUtil.renderWayPoint(Lists.newArrayList(name), x, y, z, 0x772991, partialTicks);
+            RenderUtil.renderWayPoint(Lists.newArrayList(name), x, y + 2, z, 0x772991, partialTicks);
         }
     }
 
-    public void registerWaypoint(double x, double y, double z, Duration stayFor) {
-        waypointsToAdd.add(new Waypoint(x, y, z, System.currentTimeMillis() + stayFor.toMillis(), "YOO WAYPOINT"));
+    public void registerWaypoint(double x, double y, double z, Duration stayFor, String waypointName) {
+        waypoints.add(new Waypoint(x, y, z, System.currentTimeMillis() + stayFor.toMillis(), waypointName));
+    }
+
+    public void removeWaypoint(double x, double y, double z) {
+        waypoints.removeIf(c -> c.x == x && c.y == y && c.z == z);
     }
 
     public void tickAndRenderWaypoints(float partialTicks) {
-        Iterator<Waypoint> iterator = waypoints.listIterator();
+        Iterator<Waypoint> iterator = waypoints.iterator();
         while (iterator.hasNext()) {
             Waypoint waypoint = iterator.next();
             if (System.currentTimeMillis() > waypoint.expireAt) {
@@ -52,10 +56,6 @@ public class WaypointManager {
                 waypoint.renderBeacon(partialTicks);
                 waypoint.renderNametag(partialTicks);
             }
-        }
-        synchronized (waypointsToAdd) {
-            waypoints.addAll(waypointsToAdd);
-            waypointsToAdd.clear();
         }
     }
 

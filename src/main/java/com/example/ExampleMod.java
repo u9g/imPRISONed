@@ -1,9 +1,9 @@
 package com.example;
 
 import com.example.mods.BlockHighlighter;
-import com.example.mods.BragOverlay;
-import com.example.mods.ChatProcessor;
-import com.example.mods.TradeOverlay;
+import com.example.mods.overlays.BragOverlay;
+import com.example.mods.chat_modifier.ChatProcessor;
+import com.example.mods.overlays.TradeOverlay;
 import com.example.mods.hotbar_text.BuffTextManager;
 import com.example.mods.nbt_dumper.NBTDumper;
 import com.example.mods.waypoints.ReadPingsInChat;
@@ -14,11 +14,12 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
 @Mod(modid = "examplemod", version = "0.0.1")
 public class ExampleMod {
+    public static WaypointManager waypointManager;
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(new NBTDumper());
-        WaypointManager wm = new WaypointManager();
-        MinecraftForge.EVENT_BUS.register(wm);
+        waypointManager = new WaypointManager();
+        MinecraftForge.EVENT_BUS.register(waypointManager);
         MinecraftForge.EVENT_BUS.register(new ReadPingsInChat());
 //        ClientRegistry.registerKeyBinding(new HandledKeybind("key.waypoint_make.desc", Keyboard.KEY_LBRACKET, "key.waypoint.category", () -> {
 //            EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
@@ -29,5 +30,6 @@ public class ExampleMod {
         MinecraftForge.EVENT_BUS.register(new ChatProcessor());
         MinecraftForge.EVENT_BUS.register(new TradeOverlay());
         MinecraftForge.EVENT_BUS.register(new BragOverlay());
+        MinecraftForge.EVENT_BUS.register(new ReadPingsInChat());
     }
 }

@@ -1,4 +1,4 @@
-package com.example.mixin;
+package com.example.mixin.we_do_a_bit_of_trolling;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;

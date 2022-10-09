@@ -2,17 +2,20 @@ package com.example.mods.nbt_dumper;
 
 import com.example.PrisonsModConfig;
 import com.example.mods.block_nbt_manager.TileEntityNBTManager;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import jline.internal.Nullable;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.nbt.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.util.Constants;
@@ -144,14 +147,44 @@ public class NBTDumper {
                 MovingObjectPosition m = Minecraft.getMinecraft().objectMouseOver;
                 if (m.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
                     TileEntity te = Minecraft.getMinecraft().theWorld.getTileEntity(m.getBlockPos());
-                    NBTTagCompound compound;
-                    if (PrisonsModConfig.INSTANCE.misc.newSigns && te instanceof TileEntitySign) {
-                        compound = te.serializeNBT();
+                    if (te == null) {
+                        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Block's nbt is null."));
                     } else {
-                        compound = TileEntityNBTManager.data.get(te);
+                        NBTTagCompound compound;
+                        if (PrisonsModConfig.INSTANCE.misc.newSigns && te instanceof TileEntitySign) {
+                            compound = te.serializeNBT();
+                        } else {
+                            compound = TileEntityNBTManager.data.get(te);
+                        }
+                        writeToClipboard(prettyPrintNBT(compound));
+                        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Copied block's NBT to clipboard!"));
                     }
-                    writeToClipboard(prettyPrintNBT(compound));
-                    Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Copied block's NBT to clipboard!"));
+                } else if (m.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
+                    /*For Smuggler:
+                    {
+                        "unformatted": "§7§l(click)"
+                        "skinURL": "http://textures.minecraft.net/texture/63b66ff9a3857dd09a740fae058fb881d648821c88fa2c29b102eddb6efebc7a"
+                        "uuid": "a9e9bdf1-44f5-3e36-a797-c5818b13a22e"
+                    }
+                    */
+                    String s = "{\n\t";
+                    s += "\"unformatted\": \"" + m.entityHit.getDisplayName().getUnformattedText() + "\"\n";
+                    if (m.entityHit instanceof EntityPlayer) {
+                        Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map =
+                                Minecraft.getMinecraft().getSkinManager().loadSkinFromCache(((EntityPlayer)m.entityHit).getGameProfile());
+                        if (map.containsKey(MinecraftProfileTexture.Type.SKIN)) {
+                            MinecraftProfileTexture profTex = map.get(MinecraftProfileTexture.Type.SKIN);
+                            // alternative ig?
+                            // ((EntityOtherPlayerMP) m.entityHit).getGameProfile().getProperties().properties.get("textures").iterator().next()
+                            s += "\t\"skinURL\": \"" + profTex.getUrl() + "\"\n";
+                        }
+                    }
+                    s += "\t\"uuid\": \"" + m.entityHit.getUniqueID() + "\"\n";
+                    s += "\t\"type\": \"" + m.entityHit.getClass().getSimpleName() + "\"\n";
+
+                    s += "}";
+                    writeToClipboard(s);
+                    Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Copied entity's name to clipboard!"));
                 }
             }
             on = true;

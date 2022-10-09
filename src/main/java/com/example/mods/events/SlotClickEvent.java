@@ -5,6 +5,10 @@ import net.minecraft.inventory.Slot;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
 @Cancelable
 public class SlotClickEvent extends Event {
 	public final GuiContainer guiContainer;
