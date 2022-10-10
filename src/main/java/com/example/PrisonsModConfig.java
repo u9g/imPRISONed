@@ -159,6 +159,76 @@ public class PrisonsModConfig implements Config {
         @ConfigEditorBoolean
         @ConfigGroupMember(groupId = 2)
         public boolean showZerosInWarp = false;
+
+        @ConfigOption(
+                name = "General Overlay",
+                desc = ""
+        )
+        @ConfigGroupHeader(groupId = 3)
+        public boolean _general_overlay_ = false;
+
+        @Expose
+        @ConfigOption(
+                name = "Enable general overlay",
+                desc = "Enables the general overlay, which will show an item from the specified gui on the side of it"
+        )
+        @ConfigEditorBoolean
+        @ConfigGroupMember(groupId = 3)
+        public boolean generalOverlayEnabled = true;
+
+        @Expose
+        @ConfigOption(
+                name = "Show for Lootbox NPC",
+                desc = "Shows the current lootbox"
+        )
+        @ConfigEditorBoolean
+        @ConfigGroupMember(groupId = 3)
+        public boolean generalOverlayShowLootboxNPC = true;
+
+        @Expose
+        @ConfigOption(
+                name = "Show for Tinkerer",
+                desc = "Shows the tinker result"
+        )
+        @ConfigEditorBoolean
+        @ConfigGroupMember(groupId = 3)
+        public boolean generalOverlayShowTinkerResult = true;
+
+        @Expose
+        @ConfigOption(
+                name = "Show for BAH",
+                desc = "Show for BAH item or the waiting item"
+        )
+        @ConfigEditorBoolean
+        @ConfigGroupMember(groupId = 3)
+        public boolean generalOverlayShowBAHResult = true;
+
+        @Expose
+        @ConfigOption(
+                name = "Show for Slot bot",
+                desc = "Show the flash sale item"
+        )
+        @ConfigEditorBoolean
+        @ConfigGroupMember(groupId = 3)
+        public boolean generalOverlayShowSlotBotResult = true;
+
+        @Expose
+        @ConfigOption(
+                name = "Show for Presidential Flash Sale",
+                desc = "Show the item in the shop"
+        )
+        @ConfigEditorBoolean
+        @ConfigGroupMember(groupId = 3)
+        public boolean generalOverlayPresQuestShopResult = true;
+
+        @Expose
+        @ConfigOption(
+                name = "Show for /quests",
+                desc = "Show the item with reset times"
+        )
+        @ConfigEditorBoolean
+        @ConfigGroupMember(groupId = 3)
+        public boolean generalOverlayQuestsResult = true;
     }
 
     public static class Chat {
@@ -234,6 +304,14 @@ public class PrisonsModConfig implements Config {
         )
         @ConfigEditorBoolean
         public boolean beaconsThroughWalls = true;
+
+        @Expose
+        @ConfigOption(
+                name = "Show dropped item's lore",
+                desc = "Enables showing the lore of the item entity you are pointing to"
+        )
+        @ConfigEditorBoolean
+        public boolean showDroppedItemLore = true;
     }
 
     public static class Debug {
@@ -251,6 +329,6 @@ public class PrisonsModConfig implements Config {
                 desc = "Adds some dev information to item lores."
         )
         @ConfigEditorBoolean
-        public boolean lore = false;
+        public boolean lore = true;
     }
 }

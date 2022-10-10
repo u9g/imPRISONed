@@ -6,22 +6,27 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(RenderItem.class)
 public abstract class RenderItemMixin {
     @Shadow protected abstract void draw(WorldRenderer renderer, int x, int y, int width, int height, int red, int green, int blue, int alpha);
+    @ModifyArg(method = "renderItemAndEffectIntoGUI(Lnet/minecraft/item/ItemStack;II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/RenderItem;renderItemIntoGUI(Lnet/minecraft/item/ItemStack;II)V"), index = 0)
+    public ItemStack renderItemOverlay(ItemStack stack) {
+        return ItemProgressManager.replaceRenderedItemstack(stack);
+    }
 
     @Inject(method = "renderItemOverlayIntoGUI(Lnet/minecraft/client/gui/FontRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V", at = @At("TAIL"))
     public void renderItemOverlay(FontRenderer fr, ItemStack stack, int xPosition, int yPosition, String text, CallbackInfo ci) {
         if (stack == null) return;
-
         int playerCount = ItemProgressManager.renderCountOnItem(stack);
         if (playerCount >= 0) {
             String s = (playerCount == 0 ? EnumChatFormatting.RED : "") + String.valueOf(playerCount);
@@ -31,6 +36,16 @@ public abstract class RenderItemMixin {
             fr.drawStringWithShadow(s, xPosition + 19 - 2 - fr.getStringWidth(s), yPosition + 6 + 3, 0xFFFFFF);
             GlStateManager.enableLighting();
             GlStateManager.enableDepth();
+        } else {
+            String s = ItemProgressManager.renderStringOnItem(stack);
+            if (s != null) {
+                GlStateManager.disableLighting();
+                GlStateManager.disableDepth();
+                GlStateManager.disableBlend();
+                fr.drawStringWithShadow(s, xPosition + 19 - 2 - fr.getStringWidth(s), yPosition + 6 + 3, 0xFFFFFF);
+                GlStateManager.enableLighting();
+                GlStateManager.enableDepth();
+            }
         }
 
         double progress = ItemProgressManager.progressToRender(stack);

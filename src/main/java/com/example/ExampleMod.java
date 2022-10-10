@@ -1,6 +1,9 @@
 package com.example;
 
 import com.example.mods.BlockHighlighter;
+import com.example.mods.ShowItemLore;
+import com.example.mods.ShowVignette;
+import com.example.mods.overlays.GeneralOverlay;
 import com.example.mods.overlays.BragOverlay;
 import com.example.mods.chat_modifier.ChatProcessor;
 import com.example.mods.overlays.TradeOverlay;
@@ -30,6 +33,9 @@ public class ExampleMod {
         MinecraftForge.EVENT_BUS.register(new ChatProcessor());
         MinecraftForge.EVENT_BUS.register(new TradeOverlay());
         MinecraftForge.EVENT_BUS.register(new BragOverlay());
+        MinecraftForge.EVENT_BUS.register(new GeneralOverlay());
         MinecraftForge.EVENT_BUS.register(new ReadPingsInChat());
+        MinecraftForge.EVENT_BUS.register(new ShowVignette());
+        MinecraftForge.EVENT_BUS.register(new ShowItemLore());
     }
 }

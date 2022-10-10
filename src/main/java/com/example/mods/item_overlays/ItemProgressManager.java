@@ -2,16 +2,22 @@ package com.example.mods.item_overlays;
 
 import com.example.PrisonsModConfig;
 import com.example.mixin.accessor.GuiChestAccessor;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import dev.u9g.configlib.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiChest;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ItemProgressManager {
     /**
@@ -59,5 +65,63 @@ public class ItemProgressManager {
             }
         }
         return -1;
+    }
+
+    private static Pattern ITEM_SKIN_NAME = Pattern.compile("§f§lItem Skin \\((.+)§f§l\\)");
+    /**
+     * @return null to render nothing
+     */
+    public static String renderStringOnItem(ItemStack stack) {
+        if (stack == null || !stack.hasTagCompound() || !stack.getTagCompound().getString("_x").equals("skin")) return null;
+        Matcher matcher = ITEM_SKIN_NAME.matcher(stack.getDisplayName());
+        if (!matcher.matches()) return null;
+        // TODO: FINISH
+        String itemName = matcher.group(1);
+        return Arrays.stream(itemName.split(itemName.contains(", ") ? ", " : " ")).limit(2).map(c -> {
+            StringBuilder colorsAndFirstLetter = new StringBuilder();
+            boolean lastWasSection = false;
+            for (int i = 0; i < c.length(); i++) {
+                boolean isSection = c.charAt(i) == '§';
+                colorsAndFirstLetter.append(c.charAt(i));
+                if (!isSection && !lastWasSection) {
+                    break;
+                }
+                lastWasSection = isSection;
+            }
+            return colorsAndFirstLetter.toString();
+        }).collect(Collectors.joining());
+    }
+    private static Pattern ATTACH_THIS_SKIN_TO = Pattern.compile("§5§o§7Attach this skin to any §f(.+)");
+    private static Map<String, ItemStack> armorType2Stack = new ImmutableMap.Builder<String, ItemStack>()
+            .put("Helmets", new ItemStack(Items.leather_helmet))
+            .put("Chestplates", new ItemStack(Items.leather_chestplate))
+            .put("Backpack_CUSTOM", new ItemStack(Items.chainmail_chestplate))
+            .put("Leggings", new ItemStack(Items.leather_leggings))
+            .put("Boots", new ItemStack(Items.leather_boots))
+            .put("Axes", new ItemStack(Items.wooden_axe))
+            .put("Swords", new ItemStack(Items.wooden_sword))
+            .put("Pickaxes", new ItemStack(Items.wooden_pickaxe)).build();
+
+    public static ItemStack replaceRenderedItemstack(ItemStack stack) {
+        if (stack == null || !stack.hasTagCompound() || !stack.getTagCompound().getString("_x").equals("skin")) return stack;
+        Matcher matcher = ITEM_SKIN_NAME.matcher(stack.getDisplayName());
+        if (!matcher.matches()) return stack;
+        for (String line : stack.getTooltip(Minecraft.getMinecraft().thePlayer, false)) {
+            Matcher attachSkinTo = ATTACH_THIS_SKIN_TO.matcher(line);
+            if (!attachSkinTo.matches()) continue;
+            String skinType = attachSkinTo.group(1);
+            if (skinType.contains(", ")) { // Pickaxes§7, §fSwords
+                skinType = skinType.substring(0, skinType.indexOf('§'));
+            }
+            if (skinType.equals("Chestplates")) {
+                ItemStack stackToUse = armorType2Stack.get("Chestplates");
+                if (stack.getTagCompound().getCompoundTag("cosmicData").getString("itemSkinType").contains("_BACKPACK")) {
+                    stackToUse = armorType2Stack.get("Backpack_CUSTOM");
+                }
+                return stackToUse;
+            }
+            return armorType2Stack.get(skinType);
+        }
+        return stack;
     }
 }

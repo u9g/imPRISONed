@@ -184,7 +184,20 @@ public class NBTDumper {
 
                     s += "}";
                     writeToClipboard(s);
-                    Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Copied entity's name to clipboard!"));
+                    Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Copied entity's data to clipboard!"));
+                } else if (m.typeOfHit == MovingObjectPosition.MovingObjectType.MISS) {
+                    String s = "{\n";
+//                    s += "\t\"worldTime\": " + Minecraft.getMinecraft().thePlayer.worldObj.getWorldInfo().getWorldTime() + "\n";
+//                    s += "\t\"totalTime\": " + Minecraft.getMinecraft().thePlayer.worldObj.getWorldInfo().getWorldTotalTime() + "\n";
+//                    s += "\t\"gameType(exec=creative)\": " + Minecraft.getMinecraft().thePlayer.worldObj.getWorldInfo().getGameType() + "\n";
+                    s += "\t\"spawn(for deciding what world were in)\": {\n";
+                    s += "\t\t\"x: " + Minecraft.getMinecraft().thePlayer.worldObj.getWorldInfo().getSpawnX() + ",\n";
+                    s += "\t\t\"y: " + Minecraft.getMinecraft().thePlayer.worldObj.getWorldInfo().getSpawnX() + ",\n";
+                    s += "\t\t\"z: " + Minecraft.getMinecraft().thePlayer.worldObj.getWorldInfo().getSpawnX() + "\n";
+                    s += "\t}\n";
+                    s += "}";
+                    writeToClipboard(s);
+                    Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Copied world's data to clipboard!"));
                 }
             }
             on = true;
