@@ -63,9 +63,16 @@ public class GeneralOverlay {
                 render(chest, chestInv.getStackInSlot(18));
                 break;
             }
+
             case "§c§lPresidential §8§lQuest Shop": {
                 if (!PrisonsModConfig.INSTANCE.gui.generalOverlayPresQuestShopResult) break;
                 render(chest, chestInv.getStackInSlot(22));
+                break;
+            }
+
+            case "§r§lCosmic Shrine": {
+                if (!PrisonsModConfig.INSTANCE.gui.generalOverlayShrineResult) break;
+                render(chest, chestInv.getStackInSlot(13));
                 break;
             }
         }
@@ -73,7 +80,6 @@ public class GeneralOverlay {
         if (unformattedName.startsWith("§lQuests ")) {
             if (!PrisonsModConfig.INSTANCE.gui.generalOverlayQuestsResult) return;
             render(chest, chestInv.getStackInSlot(39));
-            return;
         }
     }
 

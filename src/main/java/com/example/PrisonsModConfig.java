@@ -254,6 +254,15 @@ public class PrisonsModConfig implements Config {
         @ConfigEditorBoolean
         @ConfigGroupMember(groupId = 3)
         public boolean generalOverlayQuestsResult = true;
+
+        @Expose
+        @ConfigOption(
+                name = "Show for /shrine",
+                desc = "Show the shrine progress"
+        )
+        @ConfigEditorBoolean
+        @ConfigGroupMember(groupId = 3)
+        public boolean generalOverlayShrineResult = true;
     }
 
     public static class Chat {
