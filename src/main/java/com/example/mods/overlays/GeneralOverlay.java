@@ -48,14 +48,17 @@ public class GeneralOverlay {
 
                 if (!shouldRender) break;
             }
+
             case "§lTinkerer": {
                 if (!PrisonsModConfig.INSTANCE.gui.generalOverlayShowTinkerResult) break;
             }
+
             case "§lBlack Market Auction": {
                 if (!PrisonsModConfig.INSTANCE.gui.generalOverlayShowBAHResult) break;
                 render(chest, chestInv.getStackInSlot(4));
                 break;
             }
+
             case "§b§lCosmo§f§l-§d§lSlot Bot": {
                 // todo: fix when cut off in pres on large gui scale
                 // §c§lPresidential §b§lCosmo
