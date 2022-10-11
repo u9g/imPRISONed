@@ -77,6 +77,31 @@ public class PrisonsModConfig implements Config {
         public boolean cauldronText = true;
 
         @ConfigOption(
+                name = "Skins",
+                desc = ""
+        )
+        @ConfigGroupHeader(groupId = 99)
+        public boolean _skins_ = false;
+
+        @Expose
+        @ConfigOption(
+                name = "Change skin's item",
+                desc = "Change skins to their corresponding applicable item, backpacks = chain chestplate"
+        )
+        @ConfigEditorBoolean
+        @ConfigGroupMember(groupId = 99)
+        public boolean changeSkinItem = true;
+
+        @Expose
+        @ConfigOption(
+                name = "Write skin letters",
+                desc = "Writes two letters representing the name of the skin on the item in the player's inventory."
+        )
+        @ConfigEditorBoolean
+        @ConfigGroupMember(groupId = 99)
+        public boolean writeSkinLetters = true;
+
+        @ConfigOption(
                 name = "Brag Overlay",
                 desc = ""
         )

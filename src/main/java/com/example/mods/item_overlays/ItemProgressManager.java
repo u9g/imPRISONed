@@ -72,7 +72,7 @@ public class ItemProgressManager {
      * @return null to render nothing
      */
     public static String renderStringOnItem(ItemStack stack) {
-        if (stack == null || !stack.hasTagCompound() || !stack.getTagCompound().getString("_x").equals("skin")) return null;
+        if (!PrisonsModConfig.INSTANCE.gui.writeSkinLetters || stack == null || !stack.hasTagCompound() || !stack.getTagCompound().getString("_x").equals("skin")) return null;
         Matcher matcher = ITEM_SKIN_NAME.matcher(stack.getDisplayName());
         if (!matcher.matches()) return null;
         // TODO: FINISH
@@ -103,7 +103,7 @@ public class ItemProgressManager {
             .put("Pickaxes", new ItemStack(Items.wooden_pickaxe)).build();
 
     public static ItemStack replaceRenderedItemstack(ItemStack stack) {
-        if (stack == null || !stack.hasTagCompound() || !stack.getTagCompound().getString("_x").equals("skin")) return stack;
+        if (!PrisonsModConfig.INSTANCE.gui.changeSkinItem || stack == null || !stack.hasTagCompound() || !stack.getTagCompound().getString("_x").equals("skin")) return stack;
         Matcher matcher = ITEM_SKIN_NAME.matcher(stack.getDisplayName());
         if (!matcher.matches()) return stack;
         for (String line : stack.getTooltip(Minecraft.getMinecraft().thePlayer, false)) {
