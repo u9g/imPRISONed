@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(NetHandlerPlayClient.class)
 public class HandleChatMixin {
     @Inject(method = "handleChat(Lnet/minecraft/network/play/server/S02PacketChat;)V",
-            at = @At(value = "INVOKE", target = "Lnet/minecraftforge/event/ForgeEventFactory;onClientChat(BLnet/minecraft/util/IChatComponent;)Lnet/minecraft/util/IChatComponent;"), remap = false)
+            at = @At(value = "INVOKE", target = "Lnet/minecraftforge/event/ForgeEventFactory;onClientChat(BLnet/minecraft/util/IChatComponent;)Lnet/minecraft/util/IChatComponent;", remap = false))
     public void handleChat(S02PacketChat packetIn, CallbackInfo ci) {
         ChatProcessor.processSiblings(packetIn.getChatComponent(), packetIn.getChatComponent());
     }

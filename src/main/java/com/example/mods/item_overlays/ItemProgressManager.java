@@ -42,6 +42,8 @@ public class ItemProgressManager {
                     return timeSinceLastUse / (double)cooldown;
                 }
             }
+        } else if (PrisonsModConfig.INSTANCE.misc.midasSatchelBar && compound.getString("_x").equals("midassatchel") && compound.hasKey("__count")/*__count only exists when __count > 1*/ && compound.getShort("__count") != 15_000) {
+            return (15_000 - compound.getShort("__count")) / (double) 15_000;
         }
         return -1;
     }
@@ -123,5 +125,15 @@ public class ItemProgressManager {
             return armorType2Stack.get(skinType);
         }
         return stack;
+    }
+
+    /* return -1 to not tint */
+    public static int setTintColor(ItemStack stack) {
+        if (!stack.hasTagCompound()) return -1;
+        NBTTagCompound tag = stack.getTagCompound();
+        if (PrisonsModConfig.INSTANCE.misc.midasSatchelColor && tag.getString("_x").equals("midassatchel") && tag.getShort("__count") == 15_000) {
+            return 0x00FF00;
+        }
+        return -1;
     }
 }

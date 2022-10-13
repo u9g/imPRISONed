@@ -9,6 +9,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.nbt.*;
@@ -185,6 +186,12 @@ public class NBTDumper {
                     s += "}";
                     writeToClipboard(s);
                     Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Copied entity's data to clipboard!"));
+
+                    for (Entity entity : Minecraft.getMinecraft().theWorld.loadedEntityList) {
+                        if (entity.hasCustomName()) {
+                            System.out.println(entity.getClass().getSimpleName() + " : " + entity.getDisplayName().getUnformattedText());
+                        }
+                    }
                 } else if (m.typeOfHit == MovingObjectPosition.MovingObjectType.MISS) {
                     String s = "{\n";
 //                    s += "\t\"worldTime\": " + Minecraft.getMinecraft().thePlayer.worldObj.getWorldInfo().getWorldTime() + "\n";

@@ -1,6 +1,7 @@
 package com.example.mods.waypoints;
 
 import com.example.ExampleMod;
+import com.example.utils.Utils;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
@@ -10,6 +11,8 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.example.utils.Utils.parse;
 
 public class ReadPingsInChat {
     private static final Pattern GOLDEN_GOOSE = Pattern.compile("\\(!\\) The Golden Goose has been spotted at (-?[\\d,]+)x, (-?[\\d,]+)y, (-?[\\d,]+)z in the Midas Vault! /midas");
@@ -127,9 +130,5 @@ public class ReadPingsInChat {
                         Duration.ofMinutes(4), pair.getKey() + " Dropships");
             }
         }
-    }
-
-    private int parse(String numStr) {
-        return Integer.parseInt(numStr.replace(",", ""));
     }
 }

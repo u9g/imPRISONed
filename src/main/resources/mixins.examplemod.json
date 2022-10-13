@@ -5,7 +5,6 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "EntityMixin",
-    "redirect_chat_commands.HandleChatMixin",
     "accessor.ChatComponentStyleAccessor",
     "accessor.EnumChatFormattingAccessor",
     "accessor.GuiContainerAccessor",
@@ -14,11 +13,11 @@
     "future_signs.TileEntitySignMixin",
     "perf.EntityDiggingFXMixin",
     "perf.WorldMixin",
+    "redirect_chat_commands.HandleChatMixin",
     "we_do_a_bit_of_trolling.LivingEntityMixin"
   ],
   "client": [
     "GuiScreenMixin",
-    "we_do_a_bit_of_trolling.RenderLivingEntityMixin",
     "accessor.GuiChestAccessor",
     "accessor.GuiEditSignAccessor",
     "accessor.GuiNewChatAccessor",
@@ -32,6 +31,7 @@
     "mod_settings_hotkey.GuiIngameForgeMixin",
     "perf.EffectRendererMixin",
     "scale_baby_player_capes.MixinLayerCape",
-    "we_do_a_bit_of_trolling.RenderItemMixin"
+    "we_do_a_bit_of_trolling.RenderItemMixin",
+    "we_do_a_bit_of_trolling.RenderLivingEntityMixin"
   ]
 }

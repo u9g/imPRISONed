@@ -310,6 +310,22 @@ public class PrisonsModConfig implements Config {
         @ConfigEditorBoolean
         public boolean drawBarForPets = true;
 
+        @Expose
+        @ConfigOption(
+                name = "Midas satchel bar",
+                desc = "Draw durability bar for filled-ness of midas satchel"
+        )
+        @ConfigEditorBoolean
+        public boolean midasSatchelBar = true;
+
+        @Expose
+        @ConfigOption(
+                name = "Midas satchel color",
+                desc = "Color midas satchel green if it's filled"
+        )
+        @ConfigEditorBoolean
+        public boolean midasSatchelColor = true;
+
         // TODO: Make this a hotkey
         @Expose
         @ConfigOption(
@@ -346,6 +362,14 @@ public class PrisonsModConfig implements Config {
         )
         @ConfigEditorBoolean
         public boolean showDroppedItemLore = true;
+
+        @Expose
+        @ConfigOption(
+                name = "Wormhole highlight",
+                desc = "Highlight highest percent option at the wormhole."
+        )
+        @ConfigEditorBoolean
+        public boolean wormholeHighlight = true;
     }
 
     public static class Debug {

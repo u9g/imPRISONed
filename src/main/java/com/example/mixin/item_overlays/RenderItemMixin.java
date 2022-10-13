@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,6 +15,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(RenderItem.class)
@@ -72,5 +74,11 @@ public abstract class RenderItemMixin {
         GlStateManager.enableTexture2D();
         GlStateManager.enableLighting();
         GlStateManager.enableDepth();
+    }
+
+    @Redirect(method = "renderQuads", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/Item;getColorFromItemStack(Lnet/minecraft/item/ItemStack;I)I"))
+    public int onTint(Item instance, ItemStack stack, int renderPass) {
+        int color = ItemProgressManager.setTintColor(stack);
+        return color != -1 ? color : instance.getColorFromItemStack(stack, renderPass);
     }
 }

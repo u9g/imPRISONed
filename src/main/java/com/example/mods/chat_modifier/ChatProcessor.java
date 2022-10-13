@@ -4,7 +4,7 @@ import com.example.ExampleMod;
 import com.example.PrisonsModConfig;
 import com.example.mixin.accessor.ChatComponentStyleAccessor;
 import com.example.mixin.accessor.GuiNewChatAccessor;
-import com.example.mods.waypoints.WaypointManager;
+import com.example.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ChatLine;
 import net.minecraft.event.ClickEvent;
@@ -14,7 +14,6 @@ import net.minecraft.util.ChatStyle;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.time.Duration;
 import java.util.List;
@@ -23,7 +22,7 @@ import java.util.regex.Pattern;
 
 public class ChatProcessor {
     private static final Pattern ELITE_BANDITS_SPOTTED = Pattern.compile("\\(!\\) Elite Bandits spotted in the .+ Zone");
-    private static final Pattern LOCATION_BRAG = Pattern.compile("»§b(.+) (-?\\d+)x, (-?\\d+)y, (-?\\d+)z«");
+    private static final Pattern LOCATION_BRAG = Pattern.compile("»§b(.+) (-?[\\d,]+)x, (-?[\\d,]+)y, (-?[\\d,]+)z«");
     private boolean ignoreNextEmptyLine = false;
 
     @SubscribeEvent
@@ -91,9 +90,9 @@ public class ChatProcessor {
         if (value.startsWith("/waypoint ")) {
             String[] parts = value.replace("/waypoint ", "").split(",");
             String name = parts[0];
-            int x = Integer.parseInt(parts[1]);
-            int y = Integer.parseInt(parts[2]);
-            int z = Integer.parseInt(parts[3]);
+            int x = Utils.parse(parts[1]);
+            int y = Utils.parse(parts[2]);
+            int z = Utils.parse(parts[3]);
             ExampleMod.waypointManager.registerWaypoint(x, y, z, Duration.ofMinutes(30), name);
             return true;
         }
