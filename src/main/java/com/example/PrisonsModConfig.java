@@ -302,13 +302,12 @@ public class PrisonsModConfig implements Config {
     }
 
     public static class Misc {
-        @Expose
         @ConfigOption(
-                name = "Pets bar",
-                desc = "Draw durability bar for cooldown on pet"
+                name = "Midas",
+                desc = ""
         )
-        @ConfigEditorBoolean
-        public boolean drawBarForPets = true;
+        @ConfigGroupHeader(groupId = 99)
+        public boolean _midas_ = false;
 
         @Expose
         @ConfigOption(
@@ -316,6 +315,7 @@ public class PrisonsModConfig implements Config {
                 desc = "Draw durability bar for filled-ness of midas satchel"
         )
         @ConfigEditorBoolean
+        @ConfigGroupMember(groupId = 99)
         public boolean midasSatchelBar = true;
 
         @Expose
@@ -324,7 +324,41 @@ public class PrisonsModConfig implements Config {
                 desc = "Color midas satchel green if it's filled"
         )
         @ConfigEditorBoolean
+        @ConfigGroupMember(groupId = 99)
         public boolean midasSatchelColor = true;
+
+        @ConfigOption(
+                name = "Wormhole",
+                desc = ""
+        )
+        @ConfigGroupHeader(groupId = 98)
+        public boolean _wormhole_ = false;
+
+        @Expose
+        @ConfigOption(
+                name = "\u00a7a>% Wormhole highlight",
+                desc = "Highlight highest percent option at the wormhole in green."
+        )
+        @ConfigGroupMember(groupId = 98)
+        @ConfigEditorBoolean
+        public boolean wormholeHighlightHighestPercent = true;
+
+        @Expose
+        @ConfigOption(
+                name = "\u00a74<% Wormhole highlight",
+                desc = "Highlight lowest percent option at the wormhole in red."
+        )
+        @ConfigGroupMember(groupId = 98)
+        @ConfigEditorBoolean
+        public boolean wormholeHighlightLowestPercent = false;
+
+        @Expose
+        @ConfigOption(
+                name = "Pets bar",
+                desc = "Draw durability bar for cooldown on pet"
+        )
+        @ConfigEditorBoolean
+        public boolean drawBarForPets = true;
 
         // TODO: Make this a hotkey
         @Expose
@@ -362,14 +396,6 @@ public class PrisonsModConfig implements Config {
         )
         @ConfigEditorBoolean
         public boolean showDroppedItemLore = true;
-
-        @Expose
-        @ConfigOption(
-                name = "Wormhole highlight",
-                desc = "Highlight highest percent option at the wormhole."
-        )
-        @ConfigEditorBoolean
-        public boolean wormholeHighlight = true;
     }
 
     public static class Debug {

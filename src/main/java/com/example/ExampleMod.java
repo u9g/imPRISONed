@@ -1,6 +1,7 @@
 package com.example;
 
 import com.example.mods.BlockHighlighter;
+import com.example.mods.Midas;
 import com.example.mods.ShowItemLore;
 import com.example.mods.ShowVignette;
 import com.example.mods.wormhole_colorizer.WormholeColorizer;
@@ -12,6 +13,7 @@ import com.example.mods.hotbar_text.BuffTextManager;
 import com.example.mods.nbt_dumper.NBTDumper;
 import com.example.mods.waypoints.ReadPingsInChat;
 import com.example.mods.waypoints.WaypointManager;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -39,5 +41,6 @@ public class ExampleMod {
         MinecraftForge.EVENT_BUS.register(new ShowVignette());
         MinecraftForge.EVENT_BUS.register(new ShowItemLore());
         MinecraftForge.EVENT_BUS.register(new WormholeColorizer());
+        MinecraftForge.EVENT_BUS.register(new Midas());
     }
 }

@@ -6,8 +6,10 @@
   "mixins": [
     "EntityMixin",
     "accessor.ChatComponentStyleAccessor",
+    "accessor.EntityPlayerAccessor",
     "accessor.EnumChatFormattingAccessor",
     "accessor.GuiContainerAccessor",
+    "events.EntityPlayerMPMixin",
     "fly_speed_boost.EntityPlayerMixin",
     "fly_speed_boost.PlayerCapabilitiesMixin",
     "future_signs.TileEntitySignMixin",

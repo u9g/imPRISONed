@@ -1,6 +1,7 @@
 package com.example.mods.nbt_dumper;
 
 import com.example.PrisonsModConfig;
+import com.example.mixin.accessor.EntityPlayerAccessor;
 import com.example.mods.block_nbt_manager.TileEntityNBTManager;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import jline.internal.Nullable;
@@ -15,6 +16,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.nbt.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MovingObjectPosition;
@@ -179,6 +181,14 @@ public class NBTDumper {
                             // ((EntityOtherPlayerMP) m.entityHit).getGameProfile().getProperties().properties.get("textures").iterator().next()
                             s += "\t\"skinURL\": \"" + profTex.getUrl() + "\"\n";
                         }
+                        BlockPos spawnChunk = ((EntityPlayerAccessor)m.entityHit).spawnChunk();
+                        if (spawnChunk != null) {
+                            s += "\t\"spawnChunk\": {\n";
+                            s += "\t\tx: " + spawnChunk.getX() + ",\n";
+                            s += "\t\ty: " + spawnChunk.getY() + ",\n";
+                            s += "\t\tz: " + spawnChunk.getZ() + "\n";
+                            s += "}\n";
+                        }
                     }
                     s += "\t\"uuid\": \"" + m.entityHit.getUniqueID() + "\"\n";
                     s += "\t\"type\": \"" + m.entityHit.getClass().getSimpleName() + "\"\n";
@@ -202,6 +212,13 @@ public class NBTDumper {
                     s += "\t\t\"y: " + Minecraft.getMinecraft().thePlayer.worldObj.getWorldInfo().getSpawnX() + ",\n";
                     s += "\t\t\"z: " + Minecraft.getMinecraft().thePlayer.worldObj.getWorldInfo().getSpawnX() + "\n";
                     s += "\t}\n";
+
+                    s += "\t\"currentPosition\": {\n";
+                    s += "\t\t\"x: " + Minecraft.getMinecraft().thePlayer.posX + ",\n";
+                    s += "\t\t\"y: " + Minecraft.getMinecraft().thePlayer.posY + ",\n";
+                    s += "\t\t\"z: " + Minecraft.getMinecraft().thePlayer.posZ + "\n";
+                    s += "\t}\n";
+
                     s += "}";
                     writeToClipboard(s);
                     Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Copied world's data to clipboard!"));

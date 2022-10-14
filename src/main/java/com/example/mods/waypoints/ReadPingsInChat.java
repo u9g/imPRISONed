@@ -1,10 +1,13 @@
 package com.example.mods.waypoints;
 
 import com.example.ExampleMod;
-import com.example.utils.Utils;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.time.Duration;
@@ -16,9 +19,10 @@ import static com.example.utils.Utils.parse;
 
 public class ReadPingsInChat {
     private static final Pattern GOLDEN_GOOSE = Pattern.compile("\\(!\\) The Golden Goose has been spotted at (-?[\\d,]+)x, (-?[\\d,]+)y, (-?[\\d,]+)z in the Midas Vault! /midas");
+    private static final Pattern GOLDEN_GOOSE_KILLED = Pattern.compile("\\(!\\) (.+) killed the Golden Goose and received a Golden Egg Lootbox \\+ 75x Blood Diamonds!");
     private static final Pattern METEOR = Pattern.compile("§f(-?[\\d,]+)§7x, §f(-?[\\d,]+)§7y, §f(-?[\\d,]+)§7z");
     private static final Pattern SPAWNED_HEROIC_METEOR = Pattern.compile("\\(!\\) A Heroic meteor summoned by ([a-zA-Z0-9_]+) is falling from the sky at:");
-    private static final Pattern SPAWNED_METEOR = Pattern.compile("\\(!\\) A meteor summoned by ([a-zA-Z0-9_]+) is falling from the sky at:");
+    private static final Pattern SPAWNED_METEOR = Pattern.compile("\\(!\\) A meteor summoned by (.+) is falling from the sky at:");
     private static final Pattern METEORITE_SHOWER = Pattern.compile("\\(!\\) A meteorite shower is falling at:");
     private static final Pattern SOMETHING_SOON = Pattern.compile("(-?[\\d,]+)x, (-?[\\d,]+)y, (-?[\\d,]+)z \\(.+ Zone\\) ETA: .+");
     private static final Pattern MERCHANT = Pattern.compile("\\(!\\) A (.+) Merchant traveled to (-?[\\d,]+)x, (-?[\\d,]+)y, (-?[\\d,]+)z");
@@ -51,12 +55,15 @@ public class ReadPingsInChat {
         Matcher MERCHANT_KILLED_MATCHER = MERCHANT_KILLED.matcher(message);
         Matcher ASTEROID_COMP_MATCHER = ASTEROID_COMP.matcher(message);
         Matcher DROPSHIPS_MATCHER = DROPSHIPS.matcher(message);
+        Matcher GOLDEN_GOOSE_KILLED_MATCHER = GOLDEN_GOOSE_KILLED.matcher(message);
 
         if (GOLDEN_GOOSE_MATCHER.matches()) {
             int x = parse(GOLDEN_GOOSE_MATCHER.group(1));
             int y = parse(GOLDEN_GOOSE_MATCHER.group(2));
             int z = parse(GOLDEN_GOOSE_MATCHER.group(3));
             ExampleMod.waypointManager.registerWaypoint(x, y, z, Duration.ofMinutes(2), "Golden Goose");
+        } else if (GOLDEN_GOOSE_KILLED_MATCHER.matches()) {
+            ExampleMod.waypointManager.removeWaypoint("Golden Goose");
         } else if ("(!) A meteor is falling from the sky at:".equals(message) || SPAWNED_METEOR_MATCHER.matches()) {
             soonMessageIsMeteor = true;
             String name = SPAWNED_METEOR_MATCHER.matches() ? SPAWNED_METEOR_MATCHER.group(1) + "'s" : "Natural";

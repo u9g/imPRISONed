@@ -46,6 +46,11 @@ public class WaypointManager {
         waypoints.removeIf(c -> c.x == x && c.y == y && c.z == z);
     }
 
+    public void removeWaypoint(String name) {
+        waypoints.removeIf(c -> c.name.equals(name));
+    }
+
+
     public void tickAndRenderWaypoints(float partialTicks) {
         Iterator<Waypoint> iterator = waypoints.iterator();
         while (iterator.hasNext()) {
