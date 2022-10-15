@@ -6,7 +6,6 @@
   "mixins": [
     "EntityMixin",
     "accessor.ChatComponentStyleAccessor",
-    "accessor.EntityPlayerAccessor",
     "accessor.EnumChatFormattingAccessor",
     "accessor.GuiContainerAccessor",
     "events.EntityPlayerMPMixin",

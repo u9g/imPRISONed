@@ -1,9 +1,10 @@
 package dev.u9g.imprisoned.mods.nbt_dumper;
 
+import com.google.gson.JsonObject;
 import dev.u9g.imprisoned.PrisonsModConfig;
-import dev.u9g.imprisoned.mixin.accessor.EntityPlayerAccessor;
 import dev.u9g.imprisoned.mods.block_nbt_manager.TileEntityNBTManager;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+import dev.u9g.imprisoned.utils.Utils;
 import jline.internal.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -17,6 +18,7 @@ import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -166,8 +168,8 @@ public class NBTDumper {
                         "uuid": "a9e9bdf1-44f5-3e36-a797-c5818b13a22e"
                     }
                     */
-                    String s = "{\n\t";
-                    s += "\"unformatted\": \"" + m.entityHit.getDisplayName().getUnformattedText() + "\"\n";
+                    JsonObject root = new JsonObject();
+                    root.addProperty("unformatted", m.entityHit.getDisplayName().getUnformattedText());
                     if (m.entityHit instanceof EntityPlayer) {
                         Map<MinecraftProfileTexture.Type, MinecraftProfileTexture> map =
                                 Minecraft.getMinecraft().getSkinManager().loadSkinFromCache(((EntityPlayer)m.entityHit).getGameProfile());
@@ -175,49 +177,44 @@ public class NBTDumper {
                             MinecraftProfileTexture profTex = map.get(MinecraftProfileTexture.Type.SKIN);
                             // alternative ig?
                             // ((EntityOtherPlayerMP) m.entityHit).getGameProfile().getProperties().properties.get("textures").iterator().next()
-                            s += "\t\"skinURL\": \"" + profTex.getUrl() + "\"\n";
-                        }
-                        BlockPos spawnChunk = ((EntityPlayerAccessor)m.entityHit).spawnChunk();
-                        if (spawnChunk != null) {
-                            s += "\t\"spawnChunk\": {\n";
-                            s += "\t\tx: " + spawnChunk.getX() + ",\n";
-                            s += "\t\ty: " + spawnChunk.getY() + ",\n";
-                            s += "\t\tz: " + spawnChunk.getZ() + "\n";
-                            s += "}\n";
+                            root.addProperty("skinURL", profTex.getUrl());
                         }
                     }
-                    s += "\t\"uuid\": \"" + m.entityHit.getUniqueID() + "\"\n";
-                    s += "\t\"type\": \"" + m.entityHit.getClass().getSimpleName() + "\"\n";
+                    root.addProperty("uuid", m.entityHit.getUniqueID().toString());
+                    root.addProperty("type", m.entityHit.getClass().getSimpleName());
 
-                    s += "}";
-                    writeToClipboard(s);
+                    writeToClipboard(Utils.gson.toJson(root));
                     Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Copied entity's data to clipboard!"));
+                } else if (m.typeOfHit == MovingObjectPosition.MovingObjectType.MISS) {
+                    JsonObject root = new JsonObject();
+                    JsonObject worldInfo = new JsonObject();
+                    {
+                        WorldInfo worldInfo_ = Minecraft.getMinecraft().thePlayer.worldObj.getWorldInfo();
+                        JsonObject worldSpawn = new JsonObject();
+                        worldSpawn.addProperty("x", worldInfo_.getSpawnX());
+                        worldSpawn.addProperty("y", worldInfo_.getSpawnY());
+                        worldSpawn.addProperty("z", worldInfo_.getSpawnZ());
+                        worldInfo.add("spawn", worldSpawn);
 
-                    for (Entity entity : Minecraft.getMinecraft().theWorld.loadedEntityList) {
+                        worldInfo.addProperty("worldTime", worldInfo_.getWorldTime());
+                        worldInfo.addProperty("totalTime", worldInfo_.getWorldTotalTime());
+                        worldInfo.addProperty("gameType", worldInfo_.getGameType().toString());
+                    }
+                    root.add("worldInfo", worldInfo);
+
+                    JsonObject currentPosition = new JsonObject();
+                    currentPosition.addProperty("x", Minecraft.getMinecraft().thePlayer.posX);
+                    currentPosition.addProperty("y", Minecraft.getMinecraft().thePlayer.posY);
+                    currentPosition.addProperty("z", Minecraft.getMinecraft().thePlayer.posZ);
+                    root.add("currentPosition", currentPosition);
+
+                    writeToClipboard(Utils.gson.toJson(root));
+                    Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Copied world's data to clipboard!"));
+                    /*for (Entity entity : Minecraft.getMinecraft().theWorld.loadedEntityList) {
                         if (entity.hasCustomName()) {
                             System.out.println(entity.getClass().getSimpleName() + " : " + entity.getDisplayName().getUnformattedText());
                         }
-                    }
-                } else if (m.typeOfHit == MovingObjectPosition.MovingObjectType.MISS) {
-                    String s = "{\n";
-//                    s += "\t\"worldTime\": " + Minecraft.getMinecraft().thePlayer.worldObj.getWorldInfo().getWorldTime() + "\n";
-//                    s += "\t\"totalTime\": " + Minecraft.getMinecraft().thePlayer.worldObj.getWorldInfo().getWorldTotalTime() + "\n";
-//                    s += "\t\"gameType(exec=creative)\": " + Minecraft.getMinecraft().thePlayer.worldObj.getWorldInfo().getGameType() + "\n";
-                    s += "\t\"spawn(for deciding what world were in)\": {\n";
-                    s += "\t\t\"x: " + Minecraft.getMinecraft().thePlayer.worldObj.getWorldInfo().getSpawnX() + ",\n";
-                    s += "\t\t\"y: " + Minecraft.getMinecraft().thePlayer.worldObj.getWorldInfo().getSpawnX() + ",\n";
-                    s += "\t\t\"z: " + Minecraft.getMinecraft().thePlayer.worldObj.getWorldInfo().getSpawnX() + "\n";
-                    s += "\t}\n";
-
-                    s += "\t\"currentPosition\": {\n";
-                    s += "\t\t\"x: " + Minecraft.getMinecraft().thePlayer.posX + ",\n";
-                    s += "\t\t\"y: " + Minecraft.getMinecraft().thePlayer.posY + ",\n";
-                    s += "\t\t\"z: " + Minecraft.getMinecraft().thePlayer.posZ + "\n";
-                    s += "\t}\n";
-
-                    s += "}";
-                    writeToClipboard(s);
-                    Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Copied world's data to clipboard!"));
+                    }*/
                 }
             }
             on = true;
