@@ -19,7 +19,7 @@ import java.util.List;
 
 public class ShowItemLore {
     @SubscribeEvent
-    public void onRender(RenderGameOverlayEvent event) {
+    public void onRender(RenderGameOverlayEvent.Post event) {
         if (PrisonsModConfig.INSTANCE.misc.showDroppedItemLore && event.type != RenderGameOverlayEvent.ElementType.HOTBAR) return;
         EntityItem item = getEntityItemPlayerIsLookingAt(Minecraft.getMinecraft().getRenderViewEntity(), 20);
         if (item != null) {
