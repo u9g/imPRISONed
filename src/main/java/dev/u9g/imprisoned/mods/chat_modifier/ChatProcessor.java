@@ -4,6 +4,7 @@ import dev.u9g.imprisoned.Imprisoned;
 import dev.u9g.imprisoned.PrisonsModConfig;
 import dev.u9g.imprisoned.mixin.accessor.ChatComponentStyleAccessor;
 import dev.u9g.imprisoned.mixin.accessor.GuiNewChatAccessor;
+import dev.u9g.imprisoned.mods.waypoints.WaypointManager;
 import dev.u9g.imprisoned.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ChatLine;
@@ -84,18 +85,5 @@ public class ChatProcessor {
                 style.setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("§7Click to §bmake a waypoint §7(for 30 min)")));
             }
         }
-    }
-
-    public static boolean processChatRunCommand(String value) {
-        if (value.startsWith("/waypoint ")) {
-            String[] parts = value.replace("/waypoint ", "").split(",");
-            String name = parts[0];
-            int x = Utils.parse(parts[1]);
-            int y = Utils.parse(parts[2]);
-            int z = Utils.parse(parts[3]);
-            Imprisoned.waypointManager.registerWaypoint(x, y, z, Duration.ofMinutes(30), name);
-            return true;
-        }
-        return false;
     }
 }

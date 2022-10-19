@@ -14,7 +14,7 @@ public class RendererLivingEntityMixin {
     @Inject(method = "getColorMultiplier", at = @At("HEAD"), cancellable = true)
     public void imprisoned$callPlayerOutlineColorEvent(EntityLivingBase entitylivingbaseIn, float lightBrightness, float partialTickTime, CallbackInfoReturnable<Integer> cir) {
         PlayerOutlineColorEvent event = new PlayerOutlineColorEvent(entitylivingbaseIn);
-        Imprisoned.modules.allModules.forEach(c -> c.onPlayerOutlineColor(event));
+        Imprisoned.modules.forEach(c -> c.onPlayerOutlineColor(event));
         if (event.isColorSet()) {
             cir.setReturnValue(event.getColor());
         }

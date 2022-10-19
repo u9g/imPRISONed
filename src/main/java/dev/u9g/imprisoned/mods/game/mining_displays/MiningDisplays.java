@@ -1,4 +1,4 @@
-package dev.u9g.imprisoned.mods;
+package dev.u9g.imprisoned.mods.game.mining_displays;
 
 import dev.u9g.imprisoned.utils.Utils;
 import net.minecraft.client.Minecraft;
@@ -16,30 +16,34 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class EnergyOverlay {
+public class MiningDisplays {
     private static final Pattern ENERGY_LINE_PATTERN = Pattern.compile("§.§.§.\\(§.(.+)§. / (.+)\\)");
 
     @SubscribeEvent
     public void renderHotbar(RenderGameOverlayEvent.Pre event) {
         if (event.type != RenderGameOverlayEvent.ElementType.HELMET) return;
-        {
-            drawBar(0, "§6§lMining Level §r§f" + Minecraft.getMinecraft().thePlayer.experienceLevel, Minecraft.getMinecraft().thePlayer.experience);
-        }
-        {
-            ItemStack heldItem = Minecraft.getMinecraft().thePlayer.getHeldItem();
-            if (heldItem == null || !heldItem.hasTagCompound()) return;
-            Optional<String> energyLine = Minecraft.getMinecraft().thePlayer.getHeldItem().getTooltip(Minecraft.getMinecraft().thePlayer, false)
-                    .stream().filter(s -> ENERGY_LINE_PATTERN.matcher(s).matches()).findFirst();
-            if (!energyLine.isPresent()) return;
+        makeMiningLevelBar();
+        makeEnergyBar();
+    }
 
-            String line = energyLine.get();
-            Matcher matcher = ENERGY_LINE_PATTERN.matcher(line);
-            matcher.matches();
-            int amt = Utils.parse(matcher.group(1));
-            int max = Utils.parse(matcher.group(2));
-            float factor = (amt > max) ? 1 : (float) amt / (float) max;
-            drawBar(30, "§b§lCosmic Energy§r " + line, factor);
-        }
+    private void makeMiningLevelBar() {
+        drawBar(0, "§6§lMining Level §r§f" + Minecraft.getMinecraft().thePlayer.experienceLevel, Minecraft.getMinecraft().thePlayer.experience);
+    }
+
+    private void makeEnergyBar() {
+        ItemStack heldItem = Minecraft.getMinecraft().thePlayer.getHeldItem();
+        if (heldItem == null || !heldItem.hasTagCompound()) return;
+        Optional<String> energyLine = Minecraft.getMinecraft().thePlayer.getHeldItem().getTooltip(Minecraft.getMinecraft().thePlayer, false)
+                .stream().filter(s -> ENERGY_LINE_PATTERN.matcher(s).matches()).findFirst();
+        if (!energyLine.isPresent()) return;
+
+        String line = energyLine.get();
+        Matcher matcher = ENERGY_LINE_PATTERN.matcher(line);
+        matcher.matches();
+        int amt = Utils.parse(matcher.group(1));
+        int max = Utils.parse(matcher.group(2));
+        float factor = (amt > max) ? 1 : (float) amt / (float) max;
+        drawBar(30, "§b§lCosmic Energy§r " + line, factor);
     }
 
     public static void drawBar(int yOff, String toWrite, float factor) {

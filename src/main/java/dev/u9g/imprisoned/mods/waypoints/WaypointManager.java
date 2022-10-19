@@ -1,8 +1,12 @@
 package dev.u9g.imprisoned.mods.waypoints;
 
+import dev.u9g.imprisoned.Imprisoned;
+import dev.u9g.imprisoned.Module;
 import dev.u9g.imprisoned.PrisonsModConfig;
+import dev.u9g.imprisoned.mods.events.ClickedRunCommandInChatEvent;
 import dev.u9g.imprisoned.utils.RenderUtil;
 import com.google.common.collect.Lists;
+import dev.u9g.imprisoned.utils.Utils;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -10,7 +14,7 @@ import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class WaypointManager {
+public class WaypointManager extends Module {
     private static final Set<Waypoint> waypoints = ConcurrentHashMap.newKeySet();
 
     private static class Waypoint {
@@ -37,15 +41,15 @@ public class WaypointManager {
         }
     }
 
-    public void registerWaypoint(double x, double y, double z, Duration stayFor, String waypointName) {
+    public static void registerWaypoint(double x, double y, double z, Duration stayFor, String waypointName) {
         waypoints.add(new Waypoint(x, y, z, System.currentTimeMillis() + stayFor.toMillis(), waypointName));
     }
 
-    public void removeWaypoint(double x, double y, double z) {
+    public static void removeWaypoint(double x, double y, double z) {
         waypoints.removeIf(c -> c.x == x && c.y == y && c.z == z);
     }
 
-    public void removeWaypoint(String name) {
+    public static void removeWaypoint(String name) {
         waypoints.removeIf(c -> c.name.equals(name));
     }
 
@@ -66,5 +70,18 @@ public class WaypointManager {
     @SubscribeEvent
     public void onRenderWorld(RenderWorldLastEvent event) {
         tickAndRenderWaypoints(event.partialTicks);
+    }
+
+    @Override
+    public void onClickedRunCommandInChatEvent(ClickedRunCommandInChatEvent event) {
+        if (event.getCommandToRun().startsWith("/waypoint ")) {
+            String[] parts = event.getCommandToRun().replace("/waypoint ", "").split(",");
+            String name = parts[0];
+            int x = Utils.parse(parts[1]);
+            int y = Utils.parse(parts[2]);
+            int z = Utils.parse(parts[3]);
+            registerWaypoint(x, y, z, Duration.ofMinutes(30), name);
+            event.dontSendToServer();
+        }
     }
 }

@@ -311,7 +311,7 @@ public class PrisonsModConfig implements Config {
 
     public static class Misc {
         @ConfigOption(
-                name = "Midas",
+                name = "MidasModule",
                 desc = ""
         )
         @ConfigGroupHeader(groupId = 99)
@@ -319,7 +319,7 @@ public class PrisonsModConfig implements Config {
 
         @Expose
         @ConfigOption(
-                name = "Midas satchel bar",
+                name = "MidasModule satchel bar",
                 desc = "Draw durability bar for filled-ness of midas satchel"
         )
         @ConfigEditorBoolean
@@ -328,7 +328,7 @@ public class PrisonsModConfig implements Config {
 
         @Expose
         @ConfigOption(
-                name = "Midas satchel color",
+                name = "MidasModule satchel color",
                 desc = "Color midas satchel green if it's filled"
         )
         @ConfigEditorBoolean

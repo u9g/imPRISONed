@@ -1,15 +1,13 @@
-package dev.u9g.imprisoned.mods;
+package dev.u9g.imprisoned.mods.game.hitlist_bandits;
 
 import dev.u9g.configlib.util.Utils;
 import dev.u9g.imprisoned.Module;
 import dev.u9g.imprisoned.mixin.accessor.GuiChestAccessor;
 import dev.u9g.imprisoned.mods.events.PlayerOutlineColorEvent;
 import dev.u9g.imprisoned.mods.events.PlayerScaleEvent;
-import dev.u9g.imprisoned.utils.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiChest;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityArmorStand;
@@ -32,7 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class HitlistModule implements Module {
+public class HitlistModule extends Module {
     private static final Pattern ESCAPEE_LINE_ABOVE_HEAD = Pattern.compile("§.§l\\* Escapee \\*§r");
     private static final Pattern ESCAPEE_USERNAME_ABOVE_HEAD = Pattern.compile("§.([a-zA-Z0-9_\\s]+) ?§r");
     private static final Pattern ESCAPEE_USERNAME_IN_GUI = Pattern.compile("§.§lEscapee §f(.+)");
@@ -153,7 +151,7 @@ public class HitlistModule implements Module {
         List<String> names = entities.stream().map(c -> c.getDisplayName().getFormattedText()).collect(Collectors.toList());
 
         if (names.stream().anyMatch(c -> ESCAPEE_LINE_ABOVE_HEAD.matcher(c).matches())) {
-            event.setScale(1.5f);
+            event.setScale(4f);
         }
     }
 }

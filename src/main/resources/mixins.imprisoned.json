@@ -4,7 +4,7 @@
   "minVersion": "0.7",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "EntityMixin",
+    "cosmicprisons_compat.EntityMixin",
     "accessor.ChatComponentStyleAccessor",
     "accessor.EnumChatFormattingAccessor",
     "accessor.GuiContainerAccessor",
@@ -18,8 +18,8 @@
     "we_do_a_bit_of_trolling.LivingEntityMixin"
   ],
   "client": [
-    "GuiScreenMixin",
-    "RenderPlayerMixin",
+    "events.GuiScreenMixin",
+    "events.RenderPlayerMixin",
     "accessor.GuiChestAccessor",
     "accessor.GuiEditSignAccessor",
     "accessor.GuiNewChatAccessor",

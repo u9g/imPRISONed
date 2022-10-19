@@ -2,6 +2,10 @@ package dev.u9g.imprisoned;
 
 import com.google.common.collect.Lists;
 import dev.u9g.imprisoned.mods.*;
+import dev.u9g.imprisoned.mods.dropped_item_lore.ShowItemLore;
+import dev.u9g.imprisoned.mods.game.hitlist_bandits.HitlistModule;
+import dev.u9g.imprisoned.mods.game.midas.MidasModule;
+import dev.u9g.imprisoned.mods.game.mining_displays.MiningDisplays;
 import dev.u9g.imprisoned.mods.wormhole_colorizer.WormholeColorizer;
 import dev.u9g.imprisoned.mods.overlays.GeneralOverlay;
 import dev.u9g.imprisoned.mods.overlays.BragOverlay;
@@ -11,10 +15,6 @@ import dev.u9g.imprisoned.mods.hotbar_text.BuffTextManager;
 import dev.u9g.imprisoned.mods.nbt_dumper.NBTDumper;
 import dev.u9g.imprisoned.mods.waypoints.ReadPingsInChat;
 import dev.u9g.imprisoned.mods.waypoints.WaypointManager;
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
-import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -23,14 +23,11 @@ import java.util.Collections;
 
 @Mod(modid = "imPRISONed", version = "0.0.1")
 public class Imprisoned {
-    public static WaypointManager waypointManager;
     public static ModuleManager modules = new ModuleManager(Collections.EMPTY_LIST);
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(new NBTDumper());
-        waypointManager = new WaypointManager();
-        MinecraftForge.EVENT_BUS.register(waypointManager);
         MinecraftForge.EVENT_BUS.register(new ReadPingsInChat());
 //        ClientRegistry.registerKeyBinding(new HandledKeybind("key.waypoint_make.desc", Keyboard.KEY_LBRACKET, "key.waypoint.category", () -> {
 //            EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
@@ -46,11 +43,11 @@ public class Imprisoned {
         MinecraftForge.EVENT_BUS.register(new ShowVignette());
         MinecraftForge.EVENT_BUS.register(new ShowItemLore());
         MinecraftForge.EVENT_BUS.register(new WormholeColorizer());
-        MinecraftForge.EVENT_BUS.register(new Midas());
-        MinecraftForge.EVENT_BUS.register(new EnergyOverlay());
+        MinecraftForge.EVENT_BUS.register(new MiningDisplays());
         modules = new ModuleManager(Lists.newArrayList(
                 new HitlistModule(),
-                new ShowBoxAboveEveryonesHead()
+                new WaypointManager(),
+                new MidasModule()
         ));
     }
 }

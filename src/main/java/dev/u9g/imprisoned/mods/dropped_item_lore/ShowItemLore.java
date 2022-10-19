@@ -1,4 +1,4 @@
-package dev.u9g.imprisoned.mods;
+package dev.u9g.imprisoned.mods.dropped_item_lore;
 
 import dev.u9g.imprisoned.PrisonsModConfig;
 import net.minecraft.client.Minecraft;

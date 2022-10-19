@@ -1,4 +1,4 @@
-package dev.u9g.imprisoned.mixin;
+package dev.u9g.imprisoned.mixin.cosmicprisons_compat;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityGiantZombie;

@@ -1,6 +1,9 @@
-package dev.u9g.imprisoned.mods;
+package dev.u9g.imprisoned.mods.game.midas;
 
+import dev.u9g.imprisoned.Module;
 import dev.u9g.imprisoned.mods.events.PlayerDeathEvent;
+import dev.u9g.imprisoned.mods.events.PlayerOutlineColorEvent;
+import dev.u9g.imprisoned.mods.events.PlayerScaleEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
@@ -17,7 +20,7 @@ import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-public class Midas {
+public class MidasModule extends Module {
     private static final ScheduledExecutorService executor = Executors.newScheduledThreadPool(4);
     private static final UUID sideBoss = UUID.fromString("e2a6c9fb-7a5f-3789-9820-e8fd71ecc0bc");
     private static final UUID middleBoss = UUID.fromString("8c27394f-cde0-3b3f-95e4-ad6aded9d39c");
@@ -94,6 +97,22 @@ public class Midas {
             }
 
             return closestCorner;
+        }
+    }
+
+    @Override
+    public void onPlayerScaleEvent(PlayerScaleEvent event) {
+        if (event.getEntity().getUniqueID().equals(middleBoss)) {
+            // TODO: Is this right?
+            event.setScale(1.5f);
+        }
+    }
+
+    @Override
+    public void onPlayerOutlineColor(PlayerOutlineColorEvent event) {
+        if (event.getEntity().getUniqueID().equals(middleBoss)) {
+            // TODO: Remove this when above is confirmed right
+            event.setColor(0x80008080);
         }
     }
 }

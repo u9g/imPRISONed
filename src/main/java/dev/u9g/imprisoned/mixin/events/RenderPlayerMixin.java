@@ -1,4 +1,4 @@
-package dev.u9g.imprisoned.mixin;
+package dev.u9g.imprisoned.mixin.events;
 
 import dev.u9g.imprisoned.Imprisoned;
 import dev.u9g.imprisoned.mods.events.PlayerScaleEvent;
@@ -15,7 +15,7 @@ public class RenderPlayerMixin {
     @Inject(method = "preRenderCallback(Lnet/minecraft/entity/EntityLivingBase;F)V", at = @At("HEAD"))
     public void imprisoned$scalePlayers(EntityLivingBase entitylivingbaseIn, float partialTickTime, CallbackInfo ci) {
         PlayerScaleEvent event = new PlayerScaleEvent(entitylivingbaseIn);
-        Imprisoned.modules.allModules.forEach(c -> c.onPlayerScaleEvent(event));
+        Imprisoned.modules.forEach(c -> c.onPlayerScaleEvent(event));
         if (event.isScaleSet()) {
             GlStateManager.scale(event.getScale(), event.getScale(), event.getScale());
         }

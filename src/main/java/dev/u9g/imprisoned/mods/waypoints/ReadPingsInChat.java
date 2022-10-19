@@ -56,9 +56,9 @@ public class ReadPingsInChat {
             int x = parse(GOLDEN_GOOSE_MATCHER.group(1));
             int y = parse(GOLDEN_GOOSE_MATCHER.group(2));
             int z = parse(GOLDEN_GOOSE_MATCHER.group(3));
-            Imprisoned.waypointManager.registerWaypoint(x, y, z, Duration.ofMinutes(2), "Golden Goose");
+            WaypointManager.registerWaypoint(x, y, z, Duration.ofMinutes(2), "Golden Goose");
         } else if (GOLDEN_GOOSE_KILLED_MATCHER.matches()) {
-            Imprisoned.waypointManager.removeWaypoint("Golden Goose");
+            WaypointManager.removeWaypoint("Golden Goose");
         } else if ("(!) A meteor is falling from the sky at:".equals(message) || SPAWNED_METEOR_MATCHER.matches()) {
             soonMessageIsMeteor = true;
             String name = SPAWNED_METEOR_MATCHER.matches() ? SPAWNED_METEOR_MATCHER.group(1) + "'s" : "Natural";
@@ -72,7 +72,7 @@ public class ReadPingsInChat {
             int x = Integer.parseInt(METEOR_MATCHER.group(1));
             int y = Integer.parseInt(METEOR_MATCHER.group(2));
             int z = Integer.parseInt(METEOR_MATCHER.group(3));
-            Imprisoned.waypointManager.registerWaypoint(x, y, z, Duration.ofMinutes(1), nextMeteorType);
+            WaypointManager.registerWaypoint(x, y, z, Duration.ofMinutes(1), nextMeteorType);
         } else if (METEORITE_SHOWER_MATCHER.matches()) {
             soonSomething = true;
             nextSomething = "Meteorite Shower";
@@ -84,22 +84,22 @@ public class ReadPingsInChat {
             int x = parse(SOMETHING_SOON_MATCHER.group(1));
             int y = parse(SOMETHING_SOON_MATCHER.group(2));
             int z = parse(SOMETHING_SOON_MATCHER.group(3));
-            Imprisoned.waypointManager.registerWaypoint(x, y, z, Duration.ofMinutes(1), nextSomething);
+            WaypointManager.registerWaypoint(x, y, z, Duration.ofMinutes(1), nextSomething);
         } else if (MERCHANT_MATCHER.matches()) {
             int x = parse(MERCHANT_MATCHER.group(2));
             int y = parse(MERCHANT_MATCHER.group(3));
             int z = parse(MERCHANT_MATCHER.group(4));
-            Imprisoned.waypointManager.registerWaypoint(x, y, z, Duration.ofMinutes(5), MERCHANT_MATCHER.group(1) + " Merchant");
+            WaypointManager.registerWaypoint(x, y, z, Duration.ofMinutes(5), MERCHANT_MATCHER.group(1) + " Merchant");
         } else if (MERCHANT_KILLED_MATCHER.matches()) {
             int x = parse(MERCHANT_KILLED_MATCHER.group(3));
             int y = parse(MERCHANT_KILLED_MATCHER.group(4));
             int z = parse(MERCHANT_KILLED_MATCHER.group(5));
-            Imprisoned.waypointManager.removeWaypoint(x, y, z);
+            WaypointManager.removeWaypoint(x, y, z);
         } else if (HEROIC_METEOR_LOOTED_MATCHER.matches()) {
             int x = parse(HEROIC_METEOR_LOOTED_MATCHER.group(2));
             int y = parse(HEROIC_METEOR_LOOTED_MATCHER.group(3));
             int z = parse(HEROIC_METEOR_LOOTED_MATCHER.group(4));
-            Imprisoned.waypointManager.removeWaypoint(x, y, z);
+            WaypointManager.removeWaypoint(x, y, z);
         } else if (DROPSHIPS_MATCHER.matches()) {
             String[] parts = event.message
                     .getSiblings().get(0)
@@ -128,7 +128,7 @@ public class ReadPingsInChat {
             }
             for (Map.Entry<String, Matcher> pair : ImmutableMap.of("Chain", chain, "Gold", gold, "Iron", iron, "Diamond", diamond).entrySet()) {
                 Matcher matcher = pair.getValue();
-                Imprisoned.waypointManager.registerWaypoint(parse(matcher.group(1)), parse(matcher.group(2)), parse(matcher.group(3)),
+                WaypointManager.registerWaypoint(parse(matcher.group(1)), parse(matcher.group(2)), parse(matcher.group(3)),
                         Duration.ofMinutes(4), pair.getKey() + " Dropships");
             }
         }
