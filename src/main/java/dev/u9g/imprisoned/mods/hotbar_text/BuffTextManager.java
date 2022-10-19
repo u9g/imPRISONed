@@ -50,6 +50,12 @@ public class BuffTextManager {
             cauldron.setActiveFor(Duration.ofMinutes(10));
         } else if (unformatted.equals("(!) Haste Pet: you now have a 50% Mining Speed Booster with 1 minute remaining.")) {
             haste.setActiveFor(Duration.ofMinutes(1));
+        } else if (unformatted.equals("(!) Haste Pet: you now have a 25% Mining Speed Booster with 45 seconds remaining.")) {
+            haste.setActiveFor(Duration.ofSeconds(45));
+        } else if (unformatted.equals("(!) Haste Pet: you now have a 25% Mining Speed Booster with 30 seconds remaining.")) {
+            haste.setActiveFor(Duration.ofSeconds(30));
+        } else if (unformatted.equals("(!) Haste Pet: you now have a 25% Mining Speed Booster with 15 seconds remaining.")) {
+            haste.setActiveFor(Duration.ofSeconds(15));
         }
     }
 

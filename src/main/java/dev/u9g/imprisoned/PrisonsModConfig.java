@@ -295,10 +295,18 @@ public class PrisonsModConfig implements Config {
         @Expose
         @ConfigOption(
                 name = "Show block digging particles",
-                desc = "FPS Impact: \u00a74HIGH , for better perf: disable"
+                desc = "Disable to not render block crumb particles when mining, large FPS boost when mining"
         )
         @ConfigEditorBoolean
         public boolean renderDiggingParticles = false;
+
+        @Expose
+        @ConfigOption(
+                name = "Show particles",
+                desc = "Disable to not render any particles, large FPS boost when disabled and around lots of particles"
+        )
+        @ConfigEditorBoolean
+        public boolean renderAllParticles = true;
     }
 
     public static class Misc {
@@ -396,6 +404,26 @@ public class PrisonsModConfig implements Config {
         )
         @ConfigEditorBoolean
         public boolean showDroppedItemLore = true;
+
+        @Expose
+        @ConfigOption(
+                name = "Peaceful Skilling",
+                desc = "When enabled, if there is an entity in the way of your pickaxe when mining, you mine through the entity"
+        )
+        @ConfigEditorBoolean
+        public boolean peacefulSkilling = true;
+
+        @Expose
+        @ConfigOption(
+                name = "Peaceful Skilling transparency %",
+                desc = "The player will only be this % visible"
+        )
+        @ConfigEditorSlider(
+                minValue = 1,
+                maxValue = 100,
+                minStep = 1
+        )
+        public int peacefulSkillingTransparency = 30;
     }
 
     public static class Debug {

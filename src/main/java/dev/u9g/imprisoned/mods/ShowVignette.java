@@ -34,28 +34,15 @@ public class ShowVignette {
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer bufferbuilder = tessellator.getWorldRenderer();
         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-        bufferbuilder.pos(0.0D, (double)scaledRes.getScaledHeight(), -90.0D).tex(0.0D, 1.0D).endVertex();
-        bufferbuilder.pos((double)scaledRes.getScaledWidth(), (double)scaledRes.getScaledHeight(), -90.0D).tex(1.0D, 1.0D).endVertex();
-        bufferbuilder.pos((double)scaledRes.getScaledWidth(), 0.0D, -90.0D).tex(1.0D, 0.0D).endVertex();
+        bufferbuilder.pos(0.0D, scaledRes.getScaledHeight(), -90.0D).tex(0.0D, 1.0D).endVertex();
+        bufferbuilder.pos(scaledRes.getScaledWidth(), (double)scaledRes.getScaledHeight(), -90.0D).tex(1.0D, 1.0D).endVertex();
+        bufferbuilder.pos(scaledRes.getScaledWidth(), 0.0D, -90.0D).tex(1.0D, 0.0D).endVertex();
         bufferbuilder.pos(0.0D, 0.0D, -90.0D).tex(0.0D, 0.0D).endVertex();
         tessellator.draw();
         GlStateManager.depthMask(true);
         GlStateManager.enableDepth();
         GlStateManager.enableAlpha();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-    }
-
-    private List<String> sidebarLines() {
-        Scoreboard scoreboard = Minecraft.getMinecraft().theWorld.getScoreboard();
-        if (scoreboard == null) return Collections.EMPTY_LIST;
-        ScoreObjective objective = scoreboard.getObjectiveInDisplaySlot(1);
-        if (objective == null) return Collections.EMPTY_LIST;
-        return scoreboard
-                .getSortedScores(objective).stream()
-                .filter(c -> c != null && c.getPlayerName() != null && !c.getPlayerName().startsWith("#"))
-                .limit(15)
-                .map(c -> ScorePlayerTeam.formatPlayerName(scoreboard.getPlayersTeam(c.getPlayerName()), c.getPlayerName()))
-                .collect(Collectors.toList());
     }
 
     @SubscribeEvent

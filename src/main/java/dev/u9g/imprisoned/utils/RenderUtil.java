@@ -43,7 +43,14 @@ public class RenderUtil {
         if (showThroughWalls) GlStateManager.enableDepth();
     }
 
-    private static void drawFilledBoundingBox(AxisAlignedBB p_181561_0_, float alpha, int color) {
+    /**
+     * use one renderBoundingBox() instead
+     * @param p_181561_0_
+     * @param alpha
+     * @param color
+     */
+    @Deprecated()
+    public static void drawFilledBoundingBox(AxisAlignedBB p_181561_0_, float alpha, int color) {
 //        Color c = new Color(SpecialColour.specialToChromaRGB(special), true);
         Color c = new Color(color);
 

@@ -11,6 +11,7 @@ import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.entity.player.EnumPlayerModelParts;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -23,6 +24,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class BragOverlay {
     private static Map<UUID, ResourceLocation> capes = new HashMap<>();
@@ -135,8 +137,16 @@ public class BragOverlay {
                 } else {
                     player.inventory.mainInventory[player.inventory.currentItem] = null;
                 }
+                // refresh entity to render all parts
+                player.refreshDisplayName();
+                byte b = 0;
+                for (EnumPlayerModelParts part : EnumPlayerModelParts.values()) {
+                    b |= part.getPartMask();
+                }
+                player.getDataWatcher().updateObject(10, b);
                 // move with mouse
                 GuiInventory.drawEntityOnScreen(250, 435, 100, (565-mouseX)/*-650*/, 280-mouseY, player);
+                player.onUpdate();
                 // dont move with mouse
 //                    GuiInventory.drawEntityOnScreen(250, 435, 100, -25, 0, player);
             } else if (!usernameGettingUUID.contains(username)) {

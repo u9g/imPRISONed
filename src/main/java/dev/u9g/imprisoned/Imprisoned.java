@@ -1,9 +1,7 @@
 package dev.u9g.imprisoned;
 
-import dev.u9g.imprisoned.mods.BlockHighlighter;
-import dev.u9g.imprisoned.mods.Midas;
-import dev.u9g.imprisoned.mods.ShowItemLore;
-import dev.u9g.imprisoned.mods.ShowVignette;
+import com.google.common.collect.Lists;
+import dev.u9g.imprisoned.mods.*;
 import dev.u9g.imprisoned.mods.wormhole_colorizer.WormholeColorizer;
 import dev.u9g.imprisoned.mods.overlays.GeneralOverlay;
 import dev.u9g.imprisoned.mods.overlays.BragOverlay;
@@ -13,13 +11,21 @@ import dev.u9g.imprisoned.mods.hotbar_text.BuffTextManager;
 import dev.u9g.imprisoned.mods.nbt_dumper.NBTDumper;
 import dev.u9g.imprisoned.mods.waypoints.ReadPingsInChat;
 import dev.u9g.imprisoned.mods.waypoints.WaypointManager;
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
+import java.util.Collections;
+
 @Mod(modid = "imPRISONed", version = "0.0.1")
 public class Imprisoned {
     public static WaypointManager waypointManager;
+    public static ModuleManager modules = new ModuleManager(Collections.EMPTY_LIST);
+
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(new NBTDumper());
@@ -41,5 +47,10 @@ public class Imprisoned {
         MinecraftForge.EVENT_BUS.register(new ShowItemLore());
         MinecraftForge.EVENT_BUS.register(new WormholeColorizer());
         MinecraftForge.EVENT_BUS.register(new Midas());
+        MinecraftForge.EVENT_BUS.register(new EnergyOverlay());
+        modules = new ModuleManager(Lists.newArrayList(
+                new HitlistModule(),
+                new ShowBoxAboveEveryonesHead()
+        ));
     }
 }

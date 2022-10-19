@@ -14,8 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class WormholeColorizer {
-    private static final Pattern failRate = Pattern.compile("§c§l ?\\d+% failure rate");
-    private static final Pattern success = Pattern.compile("§a§l ?(\\d+)% success rate");
+    private static final Pattern failRate = Pattern.compile("§c§l ?(\\d+)% failure rate");
 
     @SubscribeEvent
     public void tick(RenderWorldLastEvent event) {
@@ -26,30 +25,27 @@ public class WormholeColorizer {
         Entity best = null;
         int worstSuccessRate = 200;
         Entity worst = null;
-        // TODO: These are success-fail rates are just inverts of eachother, so we don't actually need to get the successrate
-        for (EntityArmorStand failStands : world.getEntities(EntityArmorStand.class, e -> e.hasCustomName() &&
+        for (EntityArmorStand failStand : world.getEntities(EntityArmorStand.class, e -> e.hasCustomName() &&
                 failRate.matcher(e.getDisplayName().getUnformattedText()).matches())) {
-            List<Entity> entities = world.getEntitiesWithinAABB(EntityArmorStand.class, failStands.getEntityBoundingBox().expand(0, 1, 0));
-            Entity successRateEntity = entities.stream().filter(c -> success.matcher(c.getDisplayName().getUnformattedText()).matches()).findFirst().get();
-            Matcher m = success.matcher(successRateEntity.getDisplayName().getUnformattedText());
+            Matcher m = failRate.matcher(failStand.getDisplayName().getUnformattedText());
             m.matches();
-            int successRatePercent = Integer.parseInt(m.group(1));
+            int successRatePercent = 100-Integer.parseInt(m.group(1));
             if (successRatePercent > bestSuccessRate) {
                 bestSuccessRate = successRatePercent;
-                best = successRateEntity;
+                best = failStand;
             }
             if (successRatePercent < worstSuccessRate) {
                 worstSuccessRate = successRatePercent;
-                worst = successRateEntity;
+                worst = failStand;
             }
         }
 
         if (PrisonsModConfig.INSTANCE.misc.wormholeHighlightLowestPercent && worst != null) {
-            RenderUtil.renderBoundingBox(worst.posX-.5, worst.posY, worst.posZ-.5, 0xFF00F00, 0.4f, event.partialTicks, true, false);
+            RenderUtil.renderBoundingBox(worst.posX-.5, worst.posY + .35, worst.posZ-.5, 0xFF00F00, 0.4f, event.partialTicks, true, false);
         }
 
         if (PrisonsModConfig.INSTANCE.misc.wormholeHighlightHighestPercent && best != null) {
-            RenderUtil.renderBoundingBox(best.posX-.5, best.posY, best.posZ-.5, 0x00FF00, 0.4f, event.partialTicks, true, false);
+            RenderUtil.renderBoundingBox(best.posX-.5, best.posY + .35, best.posZ-.5, 0x00FF00, 0.4f, event.partialTicks, true, false);
         }
     }
 }

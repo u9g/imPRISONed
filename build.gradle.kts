@@ -73,6 +73,9 @@ dependencies {
 
     modImplementation("com.github.u9g:neuconfiglib-forge:45538f2dc4")
     shadowImpl("com.github.u9g:neuconfiglib-forge:45538f2dc4")
+
+//    shadowImpl("com.github.LlamaLad7:MixinExtras:0.1.0-rc5")
+//    annotationProcessor("com.github.LlamaLad7:MixinExtras:0.1.0-rc5")
 }
 
 // Tasks:
